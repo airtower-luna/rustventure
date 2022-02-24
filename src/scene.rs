@@ -81,16 +81,16 @@ pub struct Action {
 impl Action {
     fn from(line: &str) -> Result<Action, Box<dyn Error>> {
         lazy_static! {
-            static ref ACTION_RE: Regex = Regex::new(r"^!(\w+):(.*)\s->\s(\w+)\s(.*)$").unwrap();
+            static ref ACTION_RE: Regex = Regex::new(
+                r"^!(\w+):(.*)\s->\s(\w+)\s(.*)$").unwrap();
         }
         let c = ACTION_RE
             .captures(&line)
             .ok_or(format!("invalid action line: {}", line))?;
-        // unwrap because the line above already fails if there's no match
-        let kind = c.get(1).unwrap().as_str();
-        let expression = c.get(2).unwrap().as_str();
-        let action = c.get(3).unwrap().as_str();
-        let argument = c.get(4).unwrap().as_str();
+        let kind = &c[1];
+        let expression = &c[2];
+        let action = &c[3];
+        let argument = &c[4];
 
         let expr = if kind == "kw" {
             Regex::new(&format!("^{}$", regex::escape(&expression)))?
