@@ -14,7 +14,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut scene = Scene::load(scenepath)?;
 
-    print!("{}", &scene.description);
+    print!("{}", scene.description());
     io::stdout().flush()?;
 
     loop {
@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 Effect::Output(s) => println!("{}", s),
                 Effect::Change(s) => {
                     scene = scene.load_next(s)?;
-                    print!("{}", &scene.description);
+                    print!("{}", scene.description());
                     io::stdout().flush()?;
                 }
             }

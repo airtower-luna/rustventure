@@ -8,7 +8,7 @@ use std::path::PathBuf;
 #[derive(Debug)]
 pub struct Scene {
     path: PathBuf,
-    pub description: String,
+    description: String,
     actions: Vec<Action>,
 }
 
@@ -69,6 +69,10 @@ impl Scene {
         let mut path = self.path.clone();
         path.set_file_name(format!("{}.scene", name));
         Ok(Scene::load(path)?)
+    }
+
+    pub fn description(&self) -> &str {
+        &self.description
     }
 }
 
