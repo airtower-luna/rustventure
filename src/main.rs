@@ -28,7 +28,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
 
         if let Some(a) = scene.get_action(input.trim()) {
-            match &a.effect {
+            match a.effect() {
                 Effect::Output(s) => println!("{}", s),
                 Effect::Change(s) => {
                     scene = scene.load_next(s)?;

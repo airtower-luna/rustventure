@@ -79,7 +79,7 @@ impl Scene {
 #[derive(Debug)]
 pub struct Action {
     expression: Regex,
-    pub effect: Effect,
+    effect: Effect,
 }
 
 impl Action {
@@ -112,6 +112,10 @@ impl Action {
             expression: expr,
             effect,
         })
+    }
+
+    pub fn effect(&self) -> &Effect {
+        &self.effect
     }
 }
 
