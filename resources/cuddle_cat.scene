@@ -1,0 +1,6 @@
+*purr*
+There's a kitten purring in your arms!
+!kw:pet -> print *purr, purr*
+!kw:scritch -> print "Mrr~" The kitten wiggles softly.
+!regex:^((set )?down|release)$ -> scene kitten
+!kw:paw -> The paw twitches just a little at the touch.

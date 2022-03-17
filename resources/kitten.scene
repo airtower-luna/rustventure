@@ -1,0 +1,6 @@
+There's a little kitten in front of you!
+!kw:meow -> print "Meow!" =^.^=
+!regex:^(hug|cuddle)$ -> scene cuddle_cat
+!kw:pet -> print The kitten rubs their head on your hand.
+!kw:squeak -> The kitten paws at you curiously.
+!kw:paw -> Such adorable little paws!
