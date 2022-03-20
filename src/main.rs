@@ -2,17 +2,21 @@ use std::env;
 use std::error::Error;
 use std::io;
 use std::io::Write;
-use std::path::PathBuf;
+use std::process;
 
 mod scene;
 
+use rustventure::Config;
 use scene::{Effect, Scene};
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let mut args = env::args();
-    let scenepath = PathBuf::from(args.nth(1).ok_or("No scene file!")?);
+    let args: Vec<String> = env::args().collect();
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        eprintln!("Invalid arguments: {}", err);
+        process::exit(2);
+    });
 
-    let mut scene = Scene::load(scenepath)?;
+    let mut scene = Scene::load(config.scenepath)?;
 
     print!("{}", scene.description());
     io::stdout().flush()?;
