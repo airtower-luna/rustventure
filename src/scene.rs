@@ -85,8 +85,8 @@ pub struct Action {
 impl Action {
     fn from(line: &str) -> Result<Action, Box<dyn Error>> {
         lazy_static! {
-            static ref ACTION_RE: Regex = Regex::new(
-                r"^!(\w+):(.*)\s->\s(\w+)\s(.*)$").unwrap();
+            static ref ACTION_RE: Regex =
+                Regex::new(r"^!(\w+):(.*)\s->\s(\w+)\s(.*)$").unwrap();
         }
         let c = ACTION_RE
             .captures(&line)
@@ -125,7 +125,6 @@ pub enum Effect {
     Change(String),
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -153,13 +152,19 @@ mod tests {
     #[test]
     fn load_scene() {
         let s = kitten_scene();
-        assert_eq!(s.description().trim(),
-                   "There's a little kitten in front of you!");
+        assert_eq!(
+            s.description().trim(),
+            "There's a little kitten in front of you!"
+        );
         assert!(s.get_action("bark").is_none());
-        assert_eq!(s.get_action("meow").unwrap().effect,
-                   Effect::Output("\"Meow!\" =^.^=".to_string()));
-        assert_eq!(s.get_action("hug").unwrap().effect,
-                   Effect::Change("cuddle_cat".to_string()));
+        assert_eq!(
+            s.get_action("meow").unwrap().effect,
+            Effect::Output("\"Meow!\" =^.^=".to_string())
+        );
+        assert_eq!(
+            s.get_action("hug").unwrap().effect,
+            Effect::Change("cuddle_cat".to_string())
+        );
     }
 
     #[test]
@@ -169,17 +174,27 @@ mod tests {
         assert_eq!(a.effect, Effect::Change("cuddle_cat".to_string()));
         match a.effect() {
             Effect::Change(t) => s = s.load_next(t).unwrap(),
-            _ => panic!("unexpected effect")
+            _ => panic!("unexpected effect"),
         }
-        assert_eq!(s.description().trim(),
-                   "*purr*\nThere's a kitten purring in your arms!");
-        assert_eq!(s.get_action("pet").unwrap().effect,
-                   Effect::Output("*purr, purr*".to_string()));
-        assert_eq!(s.get_action("down").unwrap().effect,
-                   Effect::Change("kitten".to_string()));
-        assert_eq!(s.get_action("set down").unwrap().effect,
-                   Effect::Change("kitten".to_string()));
-        assert_eq!(s.get_action("release").unwrap().effect,
-                   Effect::Change("kitten".to_string()));
+        assert_eq!(
+            s.description().trim(),
+            "*purr*\nThere's a kitten purring in your arms!"
+        );
+        assert_eq!(
+            s.get_action("pet").unwrap().effect,
+            Effect::Output("*purr, purr*".to_string())
+        );
+        assert_eq!(
+            s.get_action("down").unwrap().effect,
+            Effect::Change("kitten".to_string())
+        );
+        assert_eq!(
+            s.get_action("set down").unwrap().effect,
+            Effect::Change("kitten".to_string())
+        );
+        assert_eq!(
+            s.get_action("release").unwrap().effect,
+            Effect::Change("kitten".to_string())
+        );
     }
 }
