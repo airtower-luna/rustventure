@@ -1,6 +1,5 @@
 use std::error::Error;
-use std::io;
-use std::io::Write;
+use std::io::{BufRead, Write};
 use std::path::PathBuf;
 
 mod scene;
@@ -22,29 +21,37 @@ impl Config {
     }
 }
 
-pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
+pub fn run<R, W>(
+    config: Config,
+    input: &mut R,
+    output: &mut W,
+) -> Result<(), Box<dyn Error>>
+where
+    R: BufRead,
+    W: Write,
+{
     let mut scene = Scene::load(config.scenepath)?;
 
-    print!("{}", scene.description());
-    io::stdout().flush()?;
+    write!(output, "{}", scene.description())?;
+    output.flush()?;
 
     loop {
-        print!("> ");
-        io::stdout().flush()?;
+        write!(output, "> ")?;
+        output.flush()?;
 
-        let mut input = String::new();
-        if io::stdin().read_line(&mut input)? == 0 {
-            println!();
+        let mut line = String::new();
+        if input.read_line(&mut line)? == 0 {
+            write!(output, "\n")?;
             break;
         }
 
-        if let Some(a) = scene.get_action(input.trim()) {
+        if let Some(a) = scene.get_action(line.trim()) {
             match a.effect() {
-                Effect::Output(s) => println!("{}", s),
+                Effect::Output(s) => write!(output, "{}\n", s)?,
                 Effect::Change(s) => {
                     scene = scene.load_next(s)?;
-                    print!("{}", scene.description());
-                    io::stdout().flush()?;
+                    write!(output, "{}", scene.description())?;
+                    output.flush()?;
                 }
             }
         }
