@@ -130,8 +130,10 @@ mod tests {
     use super::*;
 
     fn kitten_scene() -> Scene {
-        let mut p = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-        p.push("resources/kitten.scene");
+        let p: PathBuf =
+            [env!("CARGO_MANIFEST_DIR"), "resources", "kitten.scene"]
+                .iter()
+                .collect();
         Scene::load(p).unwrap()
     }
 

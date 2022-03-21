@@ -59,3 +59,39 @@ where
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn kitten() {
+        let path: PathBuf =
+            [env!("CARGO_MANIFEST_DIR"), "resources", "kitten.scene"]
+                .iter()
+                .collect();
+        let args: Vec<String> =
+            vec!["test".to_string(), path.to_str().unwrap().to_string()];
+        let config = Config::new(&args).unwrap();
+
+        let input = b"meow\nhug\npet";
+        let mut slice = &input[..];
+        let mut output = Vec::new();
+
+        run(config, &mut slice, &mut output).unwrap();
+        assert_eq!(
+            vec![
+                "There's a little kitten in front of you!",
+                "> \"Meow!\" =^.^=",
+                "> *purr*",
+                "There's a kitten purring in your arms!",
+                "> *purr, purr*",
+                "> ",
+            ],
+            String::from_utf8(output)
+                .unwrap()
+                .lines()
+                .collect::<Vec<&str>>()
+        );
+    }
+}
