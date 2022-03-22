@@ -57,12 +57,7 @@ impl Scene {
     }
 
     pub fn get_action(&self, input: &str) -> Option<&Action> {
-        for a in &self.actions {
-            if a.expression.is_match(input) {
-                return Some(&a);
-            }
-        }
-        None
+        self.actions.iter().find(|a| a.expression.is_match(input))
     }
 
     pub fn load_next(&self, name: &str) -> Result<Scene, Box<dyn Error>> {
