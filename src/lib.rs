@@ -11,8 +11,11 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(args: &[String]) -> Result<Config, &'static str> {
-        let path = match args.get(1) {
+    pub fn new<T>(mut args: T) -> Result<Config, &'static str>
+    where
+        T: Iterator<Item = String>,
+    {
+        let path = match args.nth(1) {
             Some(p) => p,
             None => return Err("no scene file"),
         };
@@ -72,7 +75,7 @@ mod tests {
                 .collect();
         let args: Vec<String> =
             vec!["test".to_string(), path.to_str().unwrap().to_string()];
-        let config = Config::new(&args).unwrap();
+        let config = Config::new(args.into_iter()).unwrap();
 
         let input = b"meow\nhug\npet";
         let mut slice = &input[..];
