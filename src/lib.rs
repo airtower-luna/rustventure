@@ -1,16 +1,24 @@
+//! A tiny text adventure engine made as an exercise for learning
+//! Rust.
+
 use std::error::Error;
 use std::io::{BufRead, Write};
 use std::path::PathBuf;
 
-mod scene;
+pub mod scene;
 
 use scene::{Effect, Scene};
 
+/// Runtime configuration data
 pub struct Config {
+    /// Path of the initial scene file to load
     pub scenepath: PathBuf,
 }
 
 impl Config {
+    /// Create [`Config`] from command line arguments. The second item
+    /// in the iterable (after the binary name) must be the path to
+    /// the initial scene file.
     pub fn new<T>(args: T) -> Result<Config, &'static str>
     where
         T: IntoIterator<Item = String>,
@@ -24,6 +32,17 @@ impl Config {
     }
 }
 
+/// Run a game based on the given [`Config`].
+///
+/// # Arguments
+///
+/// * `config` - Runtime configuration as returned by [`Config::new()`]
+/// * `input` - Source of user input, e.g. stdin
+/// * `output` - Destination for output to the user, e.g. stdout
+///
+/// The last two arguments exist primarily to make the function
+/// testable, but could also be used to implement some other user
+/// interface.
 pub fn run<R, W>(
     config: Config,
     input: &mut R,

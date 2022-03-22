@@ -1,3 +1,5 @@
+//! Handles scenes in an adventure.
+
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::error::Error;
@@ -27,7 +29,7 @@ impl Scene {
             if reader.read_line(&mut line)? == 0 {
                 break;
             }
-            match Action::from(line.trim()) {
+            match Action::new(line.trim()) {
                 Ok(a) => {
                     actions.push(a);
                     break;
@@ -46,7 +48,7 @@ impl Scene {
             if line.is_empty() {
                 continue;
             }
-            actions.push(Action::from(line)?);
+            actions.push(Action::new(line)?);
         }
 
         Ok(Scene {
@@ -57,7 +59,7 @@ impl Scene {
     }
 
     pub fn get_action(&self, input: &str) -> Option<&Action> {
-        self.actions.iter().find(|a| a.expression.is_match(input))
+        self.actions.iter().find(|a| a.expression().is_match(input))
     }
 
     pub fn load_next(&self, name: &str) -> Result<Scene, Box<dyn Error>> {
@@ -71,6 +73,15 @@ impl Scene {
     }
 }
 
+/// A possible action in a scene.
+///
+/// # Examples
+///
+/// ```
+/// use rustventure::scene::Action;
+/// let a = Action::new("!kw:meow -> print \"Meow!\" =^.^=").unwrap();
+/// assert!(a.expression().is_match("meow"));
+/// ```
 #[derive(Debug)]
 pub struct Action {
     expression: Regex,
@@ -78,7 +89,7 @@ pub struct Action {
 }
 
 impl Action {
-    fn from(line: &str) -> Result<Action, Box<dyn Error>> {
+    pub fn new(line: &str) -> Result<Action, Box<dyn Error>> {
         lazy_static! {
             static ref ACTION_RE: Regex =
                 Regex::new(r"^!(\w+):(.*)\s->\s(\w+)\s(.*)$").unwrap();
@@ -112,6 +123,10 @@ impl Action {
     pub fn effect(&self) -> &Effect {
         &self.effect
     }
+
+    pub fn expression(&self) -> &Regex {
+        &self.expression
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -134,16 +149,16 @@ mod tests {
 
     #[test]
     fn parse_action() {
-        let a = Action::from("!kw:meow -> print \"Meow!\" =^.^=").unwrap();
+        let a = Action::new("!kw:meow -> print \"Meow!\" =^.^=").unwrap();
         assert_eq!(a.effect, Effect::Output("\"Meow!\" =^.^=".to_string()));
-        assert_eq!(a.expression.as_str(), r"^meow$");
-        assert!(a.expression.is_match("meow"));
+        assert_eq!(a.expression().as_str(), r"^meow$");
+        assert!(a.expression().is_match("meow"));
     }
 
     #[test]
     #[should_panic(expected = "invalid action line:")]
     fn load_invalid_action() {
-        Action::from("Meow, I'm a little kitten!").unwrap();
+        Action::new("Meow, I'm a little kitten!").unwrap();
     }
 
     #[test]
