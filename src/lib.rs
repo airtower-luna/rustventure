@@ -5,6 +5,8 @@ use std::error::Error;
 use std::io::{BufRead, Write};
 use std::path::PathBuf;
 
+use clap::{arg, command, ArgMatches};
+
 pub mod scene;
 
 use scene::{Effect, Scene};
@@ -16,19 +18,23 @@ pub struct Config {
 }
 
 impl Config {
-    /// Create [`Config`] from command line arguments. The second item
-    /// in the iterable (after the binary name) must be the path to
-    /// the initial scene file.
-    pub fn new<T>(args: T) -> Result<Config, &'static str>
-    where
-        T: IntoIterator<Item = String>,
+    /// Create [`Config`] from command line arguments, or exit with
+    /// help message and error code.
+    pub fn parse() -> Config
     {
-        let path = match args.into_iter().nth(1) {
-            Some(p) => p,
-            None => return Err("no scene file"),
-        };
-        let scenepath = PathBuf::from(path);
-        Ok(Config { scenepath })
+        let m = command!()
+            .arg(arg!(<scene> "scene file to load"))
+            .arg_required_else_help(true)
+            .get_matches();
+        Config::from(m)
+    }
+}
+
+impl From<ArgMatches> for Config {
+    fn from(m: ArgMatches) -> Self {
+        Config {
+            scenepath: PathBuf::from(m.value_of("scene").unwrap()),
+        }
     }
 }
 
@@ -92,9 +98,7 @@ mod tests {
             [env!("CARGO_MANIFEST_DIR"), "resources", "kitten.scene"]
                 .iter()
                 .collect();
-        let args: Vec<String> =
-            vec!["test".to_string(), path.to_str().unwrap().to_string()];
-        let config = Config::new(args).unwrap();
+        let config = Config{ scenepath: path };
 
         let input = b"meow\nhug\npet";
         let mut slice = &input[..];

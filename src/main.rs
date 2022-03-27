@@ -1,14 +1,10 @@
-use std::env;
 use std::io;
 use std::process;
 
 use rustventure::Config;
 
 fn main() {
-    let config = Config::new(env::args()).unwrap_or_else(|err| {
-        eprintln!("Invalid arguments: {}", err);
-        process::exit(2);
-    });
+    let config = Config::parse();
 
     let stdin = io::stdin();
     let mut input = stdin.lock();
