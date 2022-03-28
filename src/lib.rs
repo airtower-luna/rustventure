@@ -59,7 +59,7 @@ where
 {
     let mut scene = Scene::load(config.scenepath)?;
 
-    write!(output, "{}", scene.description())?;
+    write!(output, "{}", scene)?;
     output.flush()?;
 
     loop {
@@ -77,7 +77,7 @@ where
                 Effect::Output(s) => write!(output, "{}\n", s)?,
                 Effect::Change(s) => {
                     scene = scene.load_next(s)?;
-                    write!(output, "{}", scene.description())?;
+                    write!(output, "{}", scene)?;
                     output.flush()?;
                 }
             }

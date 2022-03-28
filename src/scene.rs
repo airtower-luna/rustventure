@@ -3,6 +3,7 @@
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::error::Error;
+use std::fmt;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
@@ -67,9 +68,11 @@ impl Scene {
         path.set_file_name(format!("{}.scene", name));
         Ok(Scene::load(path)?)
     }
+}
 
-    pub fn description(&self) -> &str {
-        &self.description
+impl fmt::Display for Scene {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.description)
     }
 }
 
@@ -165,7 +168,7 @@ mod tests {
     fn load_scene() {
         let s = kitten_scene();
         assert_eq!(
-            s.description().trim(),
+            s.description.trim(),
             "There's a little kitten in front of you!"
         );
         assert!(s.get_action("bark").is_none());
@@ -189,7 +192,7 @@ mod tests {
             _ => panic!("unexpected effect"),
         }
         assert_eq!(
-            s.description().trim(),
+            s.description.trim(),
             "*purr*\nThere's a kitten purring in your arms!"
         );
         assert_eq!(
