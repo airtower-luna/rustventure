@@ -20,8 +20,7 @@ pub struct Config {
 impl Config {
     /// Create [`Config`] from command line arguments, or exit with
     /// help message and error code.
-    pub fn parse() -> Config
-    {
+    pub fn parse() -> Config {
         let m = command!()
             .arg(arg!(<scene> "scene file to load"))
             .arg_required_else_help(true)
@@ -42,7 +41,7 @@ impl From<ArgMatches> for Config {
 ///
 /// # Arguments
 ///
-/// * `config` - Runtime configuration as returned by [`Config::new()`]
+/// * `config` - Runtime configuration as returned by [`Config::parse()`]
 /// * `input` - Source of user input, e.g. stdin
 /// * `output` - Destination for output to the user, e.g. stdout
 ///
@@ -98,7 +97,7 @@ mod tests {
             [env!("CARGO_MANIFEST_DIR"), "resources", "kitten.scene"]
                 .iter()
                 .collect();
-        let config = Config{ scenepath: path };
+        let config = Config { scenepath: path };
 
         let input = b"meow\nhug\npet";
         let mut slice = &input[..];
