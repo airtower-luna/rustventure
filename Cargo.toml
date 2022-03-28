@@ -12,3 +12,4 @@ repository = "https://github.com/airtower-luna/rustventure"
 lazy_static = "1"
 regex = "1"
 clap = { version = "3.1", features = ["cargo"] }
+yaml-rust = "0.4"

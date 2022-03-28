@@ -1,0 +1,4 @@
+name: "A cuddly kitten"
+author: "Fiona"
+version: "1.0"
+start: kitten.scene

@@ -7,6 +7,7 @@ use std::path::PathBuf;
 
 use clap::{arg, command, ArgMatches};
 
+pub mod adventure;
 pub mod scene;
 
 use scene::{Effect, Scene};
