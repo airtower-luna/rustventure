@@ -1,7 +1,7 @@
 # Rustventure
 
-This is a tiny text adventure engine I made as a way to practice
-Rust. Build, test, and run with the usual Cargo commands.
+This is a tiny text adventure engine I made as an exercise for
+learning Rust. Build, test, and run with the usual Cargo commands.
 
 To try the included example adventure, simply run:
 
@@ -9,4 +9,4 @@ To try the included example adventure, simply run:
 cargo run
 ```
 
-Meow! :smiley_cat:
+Meow! 😸

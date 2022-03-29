@@ -1,5 +1,4 @@
-//! A tiny text adventure engine made as an exercise for learning
-//! Rust.
+#![doc = include_str!("../README.md")]
 
 use std::error;
 use std::fmt;
