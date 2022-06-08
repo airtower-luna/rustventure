@@ -5,7 +5,7 @@ use std::fmt;
 use std::io::{BufRead, Write};
 use std::path::PathBuf;
 
-use clap::{arg, command, ArgMatches};
+use clap::Parser;
 
 pub mod adventure;
 pub mod scene;
@@ -13,33 +13,13 @@ pub mod scene;
 use scene::{Effect, Scene};
 
 /// Runtime configuration data
+#[derive(Parser, Debug)]
+#[clap(author, version, about, long_about = None)]
 pub struct Config {
     /// Path of the initial scene file to load, or directory to search
     /// for adventures
-    pub scenepath: PathBuf,
-}
-
-impl Config {
-    /// Create [`Config`] from command line arguments, or exit with
-    /// help message and error code.
-    pub fn parse() -> Config {
-        let m = command!()
-            .arg(
-                arg!([scene] "scene file to load, or directory to search \
-                              for adventures")
-                .default_value("."),
-            )
-            .get_matches();
-        Config::from(m)
-    }
-}
-
-impl From<ArgMatches> for Config {
-    fn from(m: ArgMatches) -> Self {
-        Config {
-            scenepath: PathBuf::from(m.value_of("scene").unwrap()),
-        }
-    }
+    #[clap(short, long, default_value = ".")]
+    pub scene: PathBuf,
 }
 
 #[derive(Debug)]
@@ -47,7 +27,7 @@ struct Error {
     msg: String,
 }
 
-impl std::error::Error for Error {}
+impl error::Error for Error {}
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -77,8 +57,8 @@ where
 {
     // If the configured path is a directory, search it for
     // adventures. Otherwise try to load it as a scene file.
-    let mut scene = if config.scenepath.is_dir() {
-        let mut adventures = adventure::search(&config.scenepath)?;
+    let mut scene = if config.scene.is_dir() {
+        let mut adventures = adventure::search(&config.scene)?;
         if adventures.len() == 0 {
             return Err(Box::new(Error {
                 msg: "no adventures found".to_string(),
@@ -115,7 +95,7 @@ where
             adventures.swap_remove(i.unwrap() - 1).start()?
         }
     } else {
-        Scene::load(config.scenepath)?
+        Scene::load(config.scene)?
     };
 
     write!(output, "{}", scene)?;
@@ -156,7 +136,7 @@ mod tests {
             [env!("CARGO_MANIFEST_DIR"), "resources", "kitten.scene"]
                 .iter()
                 .collect();
-        let config = Config { scenepath: path };
+        let config = Config { scene: path };
 
         let input = b"meow\nhug\npet";
         let mut slice = &input[..];
