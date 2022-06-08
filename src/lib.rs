@@ -18,7 +18,7 @@ use scene::{Effect, Scene};
 pub struct Config {
     /// Path of the initial scene file to load, or directory to search
     /// for adventures
-    #[clap(short, long, default_value = ".")]
+    #[clap(default_value = ".")]
     pub scene: PathBuf,
 }
 
