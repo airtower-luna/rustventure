@@ -66,7 +66,7 @@ impl Scene {
     pub fn load_next(&self, name: &str) -> Result<Scene, Box<dyn Error>> {
         let mut path = self.path.clone();
         path.set_file_name(format!("{}.scene", name));
-        Ok(Scene::load(path)?)
+        Scene::load(path)
     }
 }
 
