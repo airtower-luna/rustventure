@@ -59,7 +59,7 @@ where
     // adventures. Otherwise try to load it as a scene file.
     let mut scene = if config.scene.is_dir() {
         let mut adventures = adventure::search(&config.scene)?;
-        if adventures.len() == 0 {
+        if adventures.is_empty() {
             return Err(Box::new(Error {
                 msg: "no adventures found".to_string(),
             }) as Box<dyn error::Error>);
