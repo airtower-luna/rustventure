@@ -132,7 +132,7 @@ impl Action {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Effect {
     Output(String),
     Change(String),

@@ -10,7 +10,7 @@ use yaml_rust::{Yaml, YamlLoader};
 
 use crate::scene::Scene;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Adventure {
     name: String,
     author: String,
