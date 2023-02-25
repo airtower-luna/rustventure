@@ -98,7 +98,7 @@ impl Action {
                 Regex::new(r"^!(\w+):(.*)\s->\s(\w+)\s(.*)$").unwrap();
         }
         let c = ACTION_RE
-            .captures(&line)
+            .captures(line)
             .ok_or(format!("invalid action line: {}", line))?;
         let kind = &c[1];
         let expression = &c[2];
@@ -106,9 +106,9 @@ impl Action {
         let argument = &c[4];
 
         let expr = if kind == "kw" {
-            Regex::new(&format!("^{}$", regex::escape(&expression)))?
+            Regex::new(&format!("^{}$", regex::escape(expression)))?
         } else {
-            Regex::new(&expression)?
+            Regex::new(expression)?
         };
 
         let effect = if action == "scene" {
