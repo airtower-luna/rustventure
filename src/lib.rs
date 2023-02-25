@@ -65,12 +65,12 @@ where
             }) as Box<dyn error::Error>);
         } else if adventures.len() == 1 {
             let a = adventures.swap_remove(0);
-            write!(output, "Starting adventure: {}\n\n", a)?;
+            writeln!(output, "Starting adventure: {}\n", a)?;
             a.start()?
         } else {
-            write!(output, "Please select an adventure by number:\n")?;
+            writeln!(output, "Please select an adventure by number:")?;
             for (i, a) in adventures.iter().enumerate() {
-                write!(output, "{}: {}\n", i + 1, a)?;
+                writeln!(output, "{}: {}", i + 1, a)?;
             }
             let mut i: Option<usize> = None;
             let mut line = String::new();
@@ -85,9 +85,9 @@ where
                     .filter(|i| i > &0 && i <= &adventures.len());
                 if i.is_none() {
                     line.clear();
-                    write!(
+                    writeln!(
                         output,
-                        "Please select a valid number (1 to {})!\n",
+                        "Please select a valid number (1 to {})!",
                         adventures.len()
                     )?;
                 }
@@ -107,13 +107,13 @@ where
 
         let mut line = String::new();
         if input.read_line(&mut line)? == 0 {
-            write!(output, "\n")?;
+            writeln!(output)?;
             break;
         }
 
         if let Some(a) = scene.get_action(line.trim()) {
             match a.effect() {
-                Effect::Output(s) => write!(output, "{}\n", s)?,
+                Effect::Output(s) => writeln!(output, "{}", s)?,
                 Effect::Change(s) => {
                     scene = scene.load_next(s)?;
                     write!(output, "{}", scene)?;
